@@ -1,0 +1,25 @@
+---
+name: Style check
+on:
+  push:
+    branches-ignore:
+      - v[0-9]*.*
+
+jobs:
+  style_check:
+    name: Style check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install
+        run: pip install -r requirement.txt
+      - name: Checks
+        run: |
+          isort --skip-gitignore --check-only ./
+          black --check ./
+          flake8 ./
+
