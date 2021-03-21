@@ -1,6 +1,6 @@
 import os
 
-from .api import BitflyerAPI, SendNewOrderRequestBody
+from bitflyer.api import BitflyerAPI, SendNewOrderRequestBody
 
 
 def lambda_handler(event, context):
