@@ -6,15 +6,21 @@ from bitflyer.api import BitflyerAPI, SendNewOrderRequestBody
 
 
 def lambda_handler(event, context):
+
+    print("Executing order with input: " + event)
+
+    # Settings retrieved from Lambda environment variables
     api_key = os.environ["key"]
     api_secret = os.environ["secret"]
 
+    # Default settings
     child_order_type = "MARKET"  # only handle market order case
     side = "BUY"  # only BUY and HODL!
     price = 0  # hardcode to 0 for market order
 
-    product_code = os.environ["product"]  # 'ETH_JPY or 'BTC_JPY'
-    target_cost = int(os.environ["target_cost"])
+    # Settings from Lambda input provided by Cloudwatch event
+    product_code = event["product_code"]
+    target_cost = int(event["target_cost"])
 
     bitflyer = BitflyerAPI(api_key, api_secret)
 
@@ -35,8 +41,12 @@ def lambda_handler(event, context):
         product_code, child_order_type, side, price, precision_adjusted_size
     )
     resp = bitflyer.send_new_order(send_order_request)
-    return {
+
+    result = {
         "statusCode": resp.status_code,
         "headers": {"Content-Type": "application/json"},
         "data": resp.json(),
     }
+    print("Result: " + str(result))
+
+    return result
