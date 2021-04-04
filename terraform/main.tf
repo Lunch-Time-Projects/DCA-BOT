@@ -88,3 +88,28 @@ resource "aws_iam_role_policy_attachment" "lambda_logging_attachment" {
   role       = aws_iam_role.lambda_exec.name
   policy_arn = aws_iam_policy.lambda_logging.arn
 }
+
+resource "aws_cloudwatch_event_rule" "cloudwatch_rules" {
+  for_each            = var.dca_bot_config
+  name                = "${each.key}_cloudwatch_rule"
+  description         = "${each.key} CloudWatch Rule"
+  schedule_expression = each.value.schedule_expression
+  is_enabled          = false # Manually enable in AWS Console
+}
+
+resource "aws_cloudwatch_event_target" "cloudwatch_targets" {
+  for_each  = var.dca_bot_config
+  rule      = "${each.key}_cloudwatch_rule"
+  target_id = "lambda_function"
+  arn       = aws_lambda_function.lambda_function.arn
+  input     = jsonencode(each.value.input)
+}
+
+resource "aws_lambda_permission" "cloudwatch_to_lambda_permissions" {
+  for_each      = var.dca_bot_config
+  statement_id  = "${each.key}_cloudwatch_to_lambda_permission"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.cloudwatch_rules[each.key].arn
+}
