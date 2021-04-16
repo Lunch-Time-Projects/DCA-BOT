@@ -15,3 +15,13 @@ variable "dca_bot_config" {
   default = {
   }
 }
+
+variable "bitflyer_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "bitflyer_secret" {
+  type      = string
+  sensitive = true
+}
