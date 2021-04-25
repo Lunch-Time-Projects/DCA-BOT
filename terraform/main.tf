@@ -1,27 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
-provider "aws" {
-  region = "us-west-2"
-}
-
-data "archive_file" "layer_zip" {
-  type        = "zip"
-  source_dir  = "../build/layer"
-  output_path = "lambda/layer.zip"
-}
-
-data "archive_file" "function_zip" {
-  type        = "zip"
-  source_dir  = "../build/function"
-  output_path = "lambda/function.zip"
-}
-
 resource "aws_lambda_layer_version" "lambda_layer" {
   layer_name          = "lambda_layer"
   filename            = data.archive_file.layer_zip.output_path
@@ -37,6 +13,13 @@ resource "aws_lambda_function" "lambda_function" {
   runtime          = "python3.8"
   source_code_hash = data.archive_file.function_zip.output_base64sha256
   layers           = [aws_lambda_layer_version.lambda_layer.arn]
+
+  environment {
+    variables = {
+      secret = var.bitflyer_secret
+      key    = var.bitflyer_key
+    }
+  }
 }
 
 resource "aws_iam_role" "lambda_exec" {
