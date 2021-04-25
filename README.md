@@ -28,15 +28,27 @@ Lunch project
 1. Deploy lambda with terraform
 
     ```sh
-    sh build-lambda.sh
+    > sh build-lambda.sh
 
-    cd terraform/
+    > cd terraform/
 
-    # check the changes
-    terraform plan
+    # check the changes, add key, and secret for bitflyer
+    > terraform plan
+    var.bitflyer_key
+    Enter a value: ***
 
-    # apply the changes
-    terraform apply
+    var.bitflyer_secret
+    Enter a value: ***
+
+
+    # apply the changes, and key, and secret for bitflyer
+    > terraform apply
+
+    var.bitflyer_key
+    Enter a value: ***
+
+    var.bitflyer_secret
+    Enter a value: ***
     ```
 
 ## Config setup
