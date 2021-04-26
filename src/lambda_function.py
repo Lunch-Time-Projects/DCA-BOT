@@ -7,7 +7,7 @@ from bitflyer.api import BitflyerAPI, SendNewOrderRequestBody
 
 def lambda_handler(event, context):
 
-    print("Executing order with input: " + event)
+    print("Executing order with input: " + str(event))
 
     # Settings retrieved from Lambda environment variables
     api_key = os.environ["key"]
