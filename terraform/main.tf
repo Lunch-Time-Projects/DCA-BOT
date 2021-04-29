@@ -77,7 +77,7 @@ resource "aws_cloudwatch_event_rule" "cloudwatch_rules" {
   name                = "${each.key}_cloudwatch_rule"
   description         = "${each.key} CloudWatch Rule"
   schedule_expression = each.value.schedule_expression
-  is_enabled          = false # Manually enable in AWS Console
+  is_enabled          = true # Change to "false" if you want to confirm your schedule beforehand
 }
 
 resource "aws_cloudwatch_event_target" "cloudwatch_targets" {
