@@ -53,4 +53,4 @@ Lunch project
 
 ## Config setup
 
-TODO
+See [here](https://github.com/Lunch-Time-Projects/DCA-BOT/blob/master/terraform/variables.tf)
